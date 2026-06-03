@@ -69,11 +69,11 @@ export default function Index() {
             </p>
           </div>
           <div className="col-span-12 md:col-span-5 flex items-center justify-center">
-            <div className="relative w-full aspect-square bg-black overflow-hidden flex items-center justify-center">
+            <div className="relative w-full aspect-square overflow-hidden">
               <img
-                src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/930e51b0-10f5-4881-8103-5c3605ce11a3.png"
-                alt="Only Vespa Moscow"
-                className="w-3/4 h-3/4 object-contain invert"
+                src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/4733d06f-4eb4-4340-8299-f376a32ad176.jpg"
+                alt="Vespa у мастерской"
+                className="w-full h-full object-cover"
               />
               <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-red-600"></div>
             </div>
