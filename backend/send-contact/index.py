@@ -1,6 +1,6 @@
 import json
 import os
-import urllib.request
+import requests
 
 def handler(event: dict, context) -> dict:
     """Отправка заявки с сайта Only Vespa в Telegram"""
@@ -38,19 +38,12 @@ def handler(event: dict, context) -> dict:
     token = os.environ['TELEGRAM_BOT_TOKEN']
     chat_id = os.environ['TELEGRAM_CHAT_ID']
 
-    data = json.dumps({
-        'chat_id': chat_id,
-        'text': text,
-        'parse_mode': 'Markdown'
-    }).encode('utf-8')
-
-    req = urllib.request.Request(
+    resp = requests.post(
         f'https://api.telegram.org/bot{token}/sendMessage',
-        data=data,
-        headers={'Content-Type': 'application/json'},
-        method='POST'
+        json={'chat_id': chat_id, 'text': text, 'parse_mode': 'Markdown'},
+        timeout=10
     )
-    urllib.request.urlopen(req)
+    resp.raise_for_status()
 
     return {
         'statusCode': 200,
