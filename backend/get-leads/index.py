@@ -9,14 +9,15 @@ def handler(event: dict, context) -> dict:
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, OPTIONS',
+                'Access-Control-Allow-Methods': 'POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Password',
                 'Access-Control-Max-Age': '86400'
             },
             'body': ''
         }
 
-    password = event.get('headers', {}).get('x-admin-password', '')
+    body = json.loads(event.get('body') or '{}')
+    password = body.get('password', '')
     if password != os.environ['ADMIN_PASSWORD']:
         return {
             'statusCode': 401,

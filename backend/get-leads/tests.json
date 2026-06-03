@@ -8,7 +8,7 @@
     },
     {
       "name": "No password - unauthorized",
-      "method": "GET",
+      "method": "POST",
       "path": "/",
       "expectedStatus": 401
     }

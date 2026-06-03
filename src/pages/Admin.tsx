@@ -18,7 +18,9 @@ export default function Admin() {
     setStatus("loading");
     try {
       const res = await fetch("https://functions.poehali.dev/b73dae70-50b0-4466-bb13-f72076056498", {
-        headers: { "x-admin-password": password },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
       });
       if (res.status === 401) { setStatus("error"); return; }
       const data = await res.json();
