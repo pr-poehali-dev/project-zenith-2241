@@ -1,4 +1,31 @@
+import { useState } from "react";
+
 export default function Index() {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("loading");
+    try {
+      const res = await fetch("https://functions.poehali.dev/489bf1a9-6c48-4e0c-9814-f0b382a5cf65", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, message }),
+      });
+      if (res.ok) {
+        setStatus("success");
+        setName(""); setPhone(""); setMessage("");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  }
+
   return (
     <main className="min-h-screen bg-white">
       {/* Navigation */}
@@ -55,9 +82,7 @@ export default function Index() {
       <section id="work" className="py-20 px-4 md:px-8 bg-black text-white">
         <div className="container mx-auto">
           <h2 className="text-6xl font-bold tracking-tighter mb-12">РАБОТЫ</h2>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Project 1 */}
             <div className="group">
               <div className="aspect-square bg-white mb-4 overflow-hidden">
                 <img
@@ -69,8 +94,6 @@ export default function Index() {
               <h3 className="text-xl font-bold mb-2">Реставрация Vespa 50S</h3>
               <p className="text-neutral-400">Полное восстановление двигателя и кузова — из убитого состояния в музейный вид</p>
             </div>
-
-            {/* Project 2 */}
             <div className="group">
               <div className="aspect-square bg-white mb-4 overflow-hidden">
                 <img
@@ -82,8 +105,6 @@ export default function Index() {
               <h3 className="text-xl font-bold mb-2">Кузовные работы</h3>
               <p className="text-neutral-400">Покраска, рихтовка, замена панелей — возвращаем первозданный вид</p>
             </div>
-
-            {/* Project 3 */}
             <div className="group">
               <div className="aspect-square bg-white mb-4 overflow-hidden">
                 <img
@@ -183,47 +204,66 @@ export default function Index() {
               </div>
             </div>
             <div>
-              <form className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm uppercase tracking-widest mb-2">
-                    Имя
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-red-600 placeholder-white/30 transition-colors"
-                    placeholder="Ваше имя"
-                  />
+              {status === "success" ? (
+                <div className="flex flex-col items-start justify-center h-full space-y-4">
+                  <p className="text-4xl font-bold tracking-tighter">Заявка отправлена!</p>
+                  <p className="text-neutral-400">Михаил свяжется с тобой в ближайшее время.</p>
+                  <button
+                    onClick={() => setStatus("idle")}
+                    className="mt-4 px-8 py-3 border border-white text-white text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors"
+                  >
+                    Отправить ещё
+                  </button>
                 </div>
-                <div>
-                  <label htmlFor="phone" className="block text-sm uppercase tracking-widest mb-2">
-                    Телефон
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-red-600 placeholder-white/30 transition-colors"
-                    placeholder="+7 (___) ___-__-__"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm uppercase tracking-widest mb-2">
-                    Сообщение
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-red-600 placeholder-white/30 transition-colors"
-                    placeholder="Расскажите о вашей Vespa"
-                  ></textarea>
-                </div>
-                <button
-                  type="submit"
-                  className="mt-8 px-8 py-3 bg-red-600 text-white text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors"
-                >
-                  Отправить
-                </button>
-              </form>
+              ) : (
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                  <div>
+                    <label htmlFor="name" className="block text-sm uppercase tracking-widest mb-2">Имя</label>
+                    <input
+                      type="text"
+                      id="name"
+                      required
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-red-600 placeholder-white/30 transition-colors"
+                      placeholder="Ваше имя"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className="block text-sm uppercase tracking-widest mb-2">Телефон</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      required
+                      value={phone}
+                      onChange={e => setPhone(e.target.value)}
+                      className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-red-600 placeholder-white/30 transition-colors"
+                      placeholder="+7 (___) ___-__-__"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="message" className="block text-sm uppercase tracking-widest mb-2">Сообщение</label>
+                    <textarea
+                      id="message"
+                      rows={4}
+                      value={message}
+                      onChange={e => setMessage(e.target.value)}
+                      className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-red-600 placeholder-white/30 transition-colors"
+                      placeholder="Расскажите о вашей Vespa"
+                    ></textarea>
+                  </div>
+                  {status === "error" && (
+                    <p className="text-red-400 text-sm">Что-то пошло не так. Попробуйте ещё раз.</p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={status === "loading"}
+                    className="mt-8 px-8 py-3 bg-red-600 text-white text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors disabled:opacity-50"
+                  >
+                    {status === "loading" ? "Отправляем..." : "Отправить"}
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </div>
@@ -241,5 +281,5 @@ export default function Index() {
         </div>
       </footer>
     </main>
-  )
+  );
 }
