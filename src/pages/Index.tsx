@@ -227,6 +227,7 @@ export default function Index() {
               </div>
             </a>
           </div>
+          <p className="text-xs text-neutral-400 mt-4">* Instagram принадлежит компании Meta, которая признана экстремистской и запрещена в России.</p>
         </div>
       </section>
 
@@ -338,22 +339,53 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Bot Banner */}
-      <section className="py-12 px-4 md:px-8 bg-red-600 text-white">
-        <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <p className="text-sm uppercase tracking-widest mb-1 opacity-80">Телеграм-бот</p>
-            <p className="text-2xl font-bold tracking-tight">Связь с мастерской — прямо в Telegram</p>
-            <p className="mt-1 opacity-80">Задайте вопрос, запишитесь на ремонт или уточните стоимость</p>
+      {/* Bot Section */}
+      <section className="py-20 px-4 md:px-8 bg-black text-white">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-sm uppercase tracking-widest text-red-500 mb-4">Telegram-бот</p>
+              <h2 className="text-5xl font-bold tracking-tighter mb-6">Всё нужное — без звонков и очередей</h2>
+              <p className="text-neutral-300 text-lg mb-8">
+                Наш бот в Telegram работает 24/7. Через него можно сделать всё — быстро и удобно.
+              </p>
+              <div className="space-y-4 mb-10">
+                {[
+                  { num: "01", text: "Заполнить заявку на ремонт или ТО" },
+                  { num: "02", text: "Заказать запчасти и расходники" },
+                  { num: "03", text: "Уточнить стоимость работ и сроки" },
+                  { num: "04", text: "Задать любой вопрос мастеру" },
+                ].map(item => (
+                  <div key={item.num} className="flex items-start gap-4 border-b border-neutral-800 pb-4">
+                    <span className="text-red-600 font-bold text-sm mt-0.5">{item.num}</span>
+                    <span className="text-neutral-200">{item.text}</span>
+                  </div>
+                ))}
+              </div>
+              <a
+                href="https://t.me/Only_vespa_bot"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-block px-10 py-4 bg-red-600 text-white text-sm uppercase tracking-widest font-bold hover:bg-white hover:text-black transition-colors"
+              >
+                Открыть бота @Only_vespa_bot
+              </a>
+            </div>
+            <div className="flex flex-col gap-4">
+              <div className="border border-neutral-700 p-6">
+                <p className="text-neutral-400 text-sm uppercase tracking-widest mb-2">Заявка на ремонт</p>
+                <p className="text-white">Опишите проблему — мастер ответит и назначит удобное время для приезда.</p>
+              </div>
+              <div className="border border-neutral-700 p-6">
+                <p className="text-neutral-400 text-sm uppercase tracking-widest mb-2">Заказ деталей</p>
+                <p className="text-white">Укажите модель и нужную деталь — подберём, уточним срок и цену доставки.</p>
+              </div>
+              <div className="border border-neutral-700 p-6">
+                <p className="text-neutral-400 text-sm uppercase tracking-widest mb-2">Консультация</p>
+                <p className="text-white">Не знаете что случилось? Напишите — разберёмся вместе.</p>
+              </div>
+            </div>
           </div>
-          <a
-            href="https://t.me/Only_vespa_bot"
-            target="_blank"
-            rel="noreferrer"
-            className="shrink-0 px-8 py-4 bg-white text-black text-sm uppercase tracking-widest font-bold hover:bg-black hover:text-white transition-colors"
-          >
-            @Only_vespa_bot
-          </a>
         </div>
       </section>
 
