@@ -216,9 +216,18 @@ export default function Index() {
                     @shalyap
                   </a>
                 </p>
-                <p className="flex items-center">
-                  <span className="w-28 text-sm uppercase tracking-widest text-neutral-400">Город</span>
-                  <span>Москва</span>
+                <p className="flex items-start">
+                  <span className="w-28 text-sm uppercase tracking-widest text-neutral-400 mt-0.5">Адрес</span>
+                  <a
+                    href="https://yandex.ru/maps/?text=3-я+Хорошёвская+улица,+19к2,+Москва"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:text-red-600 transition-colors"
+                  >
+                    м. Зорге (МЦК)<br />
+                    3-я Хорошёвская ул., 19к2<br />
+                    ГСК «Автомобилист-старт»
+                  </a>
                 </p>
               </div>
               <div className="mt-12">
@@ -295,11 +304,33 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Bot Banner */}
+      <section className="py-12 px-4 md:px-8 bg-red-600 text-white">
+        <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <p className="text-sm uppercase tracking-widest mb-1 opacity-80">Телеграм-бот</p>
+            <p className="text-2xl font-bold tracking-tight">Связь с мастерской — прямо в Telegram</p>
+            <p className="mt-1 opacity-80">Задайте вопрос, запишитесь на ремонт или уточните стоимость</p>
+          </div>
+          <a
+            href="https://t.me/Only_vespa_bot"
+            target="_blank"
+            rel="noreferrer"
+            className="shrink-0 px-8 py-4 bg-white text-black text-sm uppercase tracking-widest font-bold hover:bg-black hover:text-white transition-colors"
+          >
+            @Only_vespa_bot
+          </a>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-8 px-4 md:px-8 bg-white border-t border-black">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm mb-4 md:mb-0">2025 Only Vespa Moscow. Все права защищены.</p>
           <div className="flex space-x-8">
+            <a href="https://t.me/Only_vespa_bot" target="_blank" rel="noreferrer" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
+              Бот
+            </a>
             <a href="https://t.me/shalyap" target="_blank" rel="noreferrer" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
               Telegram
             </a>
