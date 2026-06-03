@@ -5,14 +5,14 @@ export default function Index() {
       <nav className="fixed top-0 left-0 w-full z-50 bg-white border-b border-black">
         <div className="container mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
           <a href="/" className="text-xl font-bold tracking-tighter">
-            GRIDFORM
+            ONLY VESPA
           </a>
           <div className="flex space-x-8">
             <a href="#work" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
               Работы
             </a>
             <a href="#about" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
-              О нас
+              История
             </a>
             <a href="#contact" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
               Контакты
@@ -26,16 +26,21 @@ export default function Index() {
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-12 md:col-span-7 mb-8 md:mb-0">
             <h1 className="text-8xl md:text-9xl font-bold tracking-tighter leading-none mb-6">
-              GRID
+              ONLY
               <br />
-              FORM
+              VESPA
             </h1>
             <p className="text-xl max-w-xl">
-              Ясность. Точность. Структура. Мы превращаем сложные идеи в чистый, функциональный дизайн, который говорит сам за себя.
+              Мастерская, которая начиналась с гаража и страсти. Сегодня — место, куда приходят за честным ремонтом и остаются работать.
             </p>
           </div>
           <div className="col-span-12 md:col-span-5 flex items-center justify-center">
-            <div className="relative w-full aspect-square bg-red-600">
+            <div className="relative w-full aspect-square bg-red-600 overflow-hidden">
+              <img
+                src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/files/a5cfbabb-dd30-481a-b4c7-4835c961693b.jpg"
+                alt="Only Vespa мастерская"
+                className="w-full h-full object-cover mix-blend-multiply"
+              />
               <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-black"></div>
             </div>
           </div>
@@ -51,34 +56,38 @@ export default function Index() {
             {/* Project 1 */}
             <div className="group">
               <div className="aspect-square bg-white mb-4 overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center bg-neutral-100 group-hover:bg-red-600 transition-colors duration-300">
-                  <span className="text-black text-8xl font-bold">01</span>
-                </div>
+                <img
+                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/files/b9bcc293-f85a-492b-aa5d-148a8bfbbb1e.jpg"
+                  alt="Реставрация Vespa"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
-              <h3 className="text-xl font-bold mb-2">TechFlow Solutions</h3>
-              <p className="text-neutral-400">Полный брендинг и типографическая система для финтех-стартапа</p>
+              <h3 className="text-xl font-bold mb-2">Реставрация Vespa 50S</h3>
+              <p className="text-neutral-400">Полное восстановление двигателя и кузова — из убитого состояния в музейный вид</p>
             </div>
 
             {/* Project 2 */}
             <div className="group">
               <div className="aspect-square bg-white mb-4 overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center bg-neutral-100 group-hover:bg-red-600 transition-colors duration-300">
-                  <span className="text-black text-8xl font-bold">02</span>
-                </div>
+                <img
+                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/files/5f182216-b805-4826-922e-8e0238202153.jpg"
+                  alt="Парк мопедов"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
-              <h3 className="text-xl font-bold mb-2">Alpine Ventures</h3>
-              <p className="text-neutral-400">Минималистичная визуальная коммуникация для инвестиционного фонда</p>
+              <h3 className="text-xl font-bold mb-2">Парк клиентских Vespa</h3>
+              <p className="text-neutral-400">Техническое обслуживание и хранение — доверяют самое ценное</p>
             </div>
 
             {/* Project 3 */}
             <div className="group">
               <div className="aspect-square bg-white mb-4 overflow-hidden">
                 <div className="w-full h-full flex items-center justify-center bg-neutral-100 group-hover:bg-red-600 transition-colors duration-300">
-                  <span className="text-black text-8xl font-bold">03</span>
+                  <span className="text-black group-hover:text-white text-8xl font-bold transition-colors duration-300">03</span>
                 </div>
               </div>
-              <h3 className="text-xl font-bold mb-2">Nova Industries</h3>
-              <p className="text-neutral-400">Модульная дизайн-система для производственной компании</p>
+              <h3 className="text-xl font-bold mb-2">Кастомные проекты</h3>
+              <p className="text-neutral-400">Нестандартные решения — цвет, детали, характер. Под запрос клиента</p>
             </div>
           </div>
         </div>
@@ -89,38 +98,43 @@ export default function Index() {
         <div className="container mx-auto">
           <div className="grid grid-cols-12 gap-8">
             <div className="col-span-12 md:col-span-5">
-              <h2 className="text-6xl font-bold tracking-tighter mb-8">О НАС</h2>
-              <div className="aspect-[4/5] bg-neutral-100 relative mb-8 md:mb-0">
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 border-2 border-black"></div>
+              <h2 className="text-6xl font-bold tracking-tighter mb-8">ИСТОРИЯ</h2>
+              <div className="aspect-[4/5] bg-neutral-100 relative mb-8 md:mb-0 overflow-hidden">
+                <img
+                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/files/a5cfbabb-dd30-481a-b4c7-4835c961693b.jpg"
+                  alt="Михаил — основатель Only Vespa"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 border-2 border-white pointer-events-none"></div>
               </div>
             </div>
             <div className="col-span-12 md:col-span-7 md:pt-24">
               <p className="text-xl mb-6">
-                GRIDFORM - дизайн-студия, преданная принципам ясности, точности и осмысленной коммуникации. Мы верим, что великий дизайн незаметен - он просто работает.
+                Михаил начинал с малого — чинил свою Vespa в гараже, потом помогал друзьям. Без вывески, без рекламы. Только руки, инструмент и честность.
               </p>
               <p className="mb-6">
-                Наш подход основан на системном мышлении и типографическом мастерстве. Мы используем модульные сетки, чистую гротескную типографику, асимметричные композиции и предметную фотографию для создания дизайна, который говорит ясно и убедительно.
+                Слово расходилось само. Сначала знакомые знакомых, потом незнакомые люди из другого конца города. Каждый мопед, который выезжал из гаража, становился лучшей рекламой.
               </p>
               <p className="mb-6">
-                Основанная дизайнерами, убежденными, что форма следует за функцией, мы сотрудничаем с прогрессивными брендами, создавая визуальные языки, которые проверены временем.
+                Сегодня Only Vespa — это настоящая мастерская. Сюда приходят клиенты, которые ценят честный ремонт. И мастера, которые хотят работать там, где уважают ремесло.
               </p>
               <div className="grid grid-cols-2 gap-4 mt-12">
                 <div>
                   <h3 className="text-sm uppercase tracking-widest mb-2">Принципы</h3>
                   <ul className="space-y-2">
-                    <li>Минимализм</li>
-                    <li>Модульные сетки</li>
-                    <li>Гротескная типографика</li>
-                    <li>Предметная фотография</li>
+                    <li>Честная диагностика</li>
+                    <li>Только оригинальные детали</li>
+                    <li>Уважение к машине</li>
+                    <li>Работа на совесть</li>
                   </ul>
                 </div>
                 <div>
                   <h3 className="text-sm uppercase tracking-widest mb-2">Услуги</h3>
                   <ul className="space-y-2">
-                    <li>Брендинг</li>
-                    <li>Визуальные системы</li>
-                    <li>Типографика</li>
-                    <li>Цифровой дизайн</li>
+                    <li>Ремонт и ТО</li>
+                    <li>Реставрация</li>
+                    <li>Кастомизация</li>
+                    <li>Хранение</li>
                   </ul>
                 </div>
               </div>
@@ -135,12 +149,12 @@ export default function Index() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
               <h2 className="text-6xl font-bold tracking-tighter mb-8">КОНТАКТЫ</h2>
-              <p className="text-xl mb-8">Заинтересованы в сотрудничестве? Давайте обсудим ваш проект.</p>
+              <p className="text-xl mb-8">Записаться на ремонт или приехать познакомиться — добро пожаловать.</p>
               <div className="space-y-4">
                 <p className="flex items-center">
                   <span className="w-24 text-sm uppercase tracking-widest">Почта</span>
-                  <a href="mailto:hello@gridform.ru" className="hover:underline">
-                    hello@gridform.ru
+                  <a href="mailto:hello@onlyvespa.ru" className="hover:underline">
+                    hello@onlyvespa.ru
                   </a>
                 </p>
                 <p className="flex items-center">
@@ -187,7 +201,7 @@ export default function Index() {
                     id="message"
                     rows={4}
                     className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-black placeholder-white/50"
-                    placeholder="Ваше сообщение"
+                    placeholder="Расскажите о вашей Vespa"
                   ></textarea>
                 </div>
                 <button
@@ -205,13 +219,10 @@ export default function Index() {
       {/* Footer */}
       <footer className="py-8 px-4 md:px-8 bg-black text-white">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm mb-4 md:mb-0">2025 GRIDFORM Studio. Все права защищены.</p>
+          <p className="text-sm mb-4 md:mb-0">2025 Only Vespa. Все права защищены.</p>
           <div className="flex space-x-8">
             <a href="#" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
               Instagram
-            </a>
-            <a href="#" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
-              Behance
             </a>
             <a href="#" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
               Telegram
