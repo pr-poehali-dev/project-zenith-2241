@@ -39,6 +39,9 @@ export default function Index() {
             />
           </a>
           <div className="flex space-x-8">
+            <a href="#services" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
+              Услуги
+            </a>
             <a href="#work" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
               Работы
             </a>
@@ -74,6 +77,29 @@ export default function Index() {
               />
               <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-red-600"></div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section id="services" className="py-20 px-4 md:px-8">
+        <div className="container mx-auto">
+          <h2 className="text-6xl font-bold tracking-tighter mb-12">УСЛУГИ</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-t border-l border-black">
+            {[
+              { title: "Техническое обслуживание", desc: "Плановое техобслуживание и текущий ремонт" },
+              { title: "Ремонт после ДТП", desc: "Восстановление геометрии, ремонт и покраска пластиковых и металлических элементов" },
+              { title: "Мотоэвакуатор", desc: "Доставка мототехники по Москве и ближайшим областям" },
+              { title: "Реставрация и восстановление", desc: "Реставрация и восстановление оригинального состояния классических мотороллеров" },
+              { title: "Детали в наличии и на заказ", desc: "Основные расходники в наличии, широкий перечень деталей на заказ с доставкой из-за рубежа" },
+              { title: "Сезонное хранение", desc: "Бережно храним технику в межсезонье в тёплом помещении под чехлом" },
+            ].map((s, i) => (
+              <div key={i} className="border-b border-r border-black p-8 hover:bg-black hover:text-white transition-colors group">
+                <div className="text-red-600 text-4xl font-bold mb-4 group-hover:text-red-500">0{i + 1}</div>
+                <h3 className="text-xl font-bold mb-3">{s.title}</h3>
+                <p className="text-neutral-500 group-hover:text-neutral-300">{s.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
