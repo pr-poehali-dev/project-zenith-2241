@@ -1,9 +1,9 @@
 import json
 import os
-import requests
+import psycopg2
 
 def handler(event: dict, context) -> dict:
-    """Отправка заявки с сайта Only Vespa в Telegram"""
+    """Сохранение заявки с сайта Only Vespa в базу данных"""
     if event.get('httpMethod') == 'OPTIONS':
         return {
             'statusCode': 200,
@@ -28,22 +28,15 @@ def handler(event: dict, context) -> dict:
             'body': json.dumps({'error': 'name and phone are required'})
         }
 
-    text = (
-        f"🛵 *Новая заявка с сайта Only Vespa*\n\n"
-        f"👤 *Имя:* {name}\n"
-        f"📞 *Телефон:* {phone}\n"
-        f"💬 *Сообщение:* {message or '—'}"
+    conn = psycopg2.connect(os.environ['DATABASE_URL'])
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO leads (name, phone, message) VALUES (%s, %s, %s)",
+        (name, phone, message or None)
     )
-
-    token = os.environ['TELEGRAM_BOT_TOKEN']
-    chat_id = os.environ['TELEGRAM_CHAT_ID']
-
-    resp = requests.post(
-        f'https://api.telegram.org/bot{token}/sendMessage',
-        json={'chat_id': chat_id, 'text': text, 'parse_mode': 'Markdown'},
-        timeout=10
-    )
-    resp.raise_for_status()
+    conn.commit()
+    cur.close()
+    conn.close()
 
     return {
         'statusCode': 200,
