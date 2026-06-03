@@ -62,7 +62,7 @@ export default function Index() {
               VESPA
             </h1>
             <p className="text-xl max-w-xl">
-              Мастерская, которая начиналась с гаража и страсти. Сегодня — место, куда приходят за честным ремонтом и остаются работать.
+              Мастерская, которая начиналась с гаража и идеи. Сегодня — место, куда привозят Vespa и знают, что её вернут живой.
             </p>
           </div>
           <div className="col-span-12 md:col-span-5 flex items-center justify-center">
