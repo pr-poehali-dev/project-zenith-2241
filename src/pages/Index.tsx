@@ -123,24 +123,24 @@ export default function Index() {
             <div className="group">
               <div className="aspect-square bg-white mb-4 overflow-hidden">
                 <img
-                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/55fb4932-33b0-41db-96fe-9707391b4143.jpg"
-                  alt="Кузовные работы"
+                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/c8481cda-06af-4af8-b859-021ce38b2271.jpg"
+                  alt="Техническое обслуживание"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <h3 className="text-xl font-bold mb-2">Кузовные работы</h3>
-              <p className="text-neutral-400">Покраска, рихтовка, замена панелей — возвращаем первозданный вид</p>
+              <h3 className="text-xl font-bold mb-2">Техническое обслуживание</h3>
+              <p className="text-neutral-400">Разбираем до винтика, чистим, регулируем — скутер выходит как после завода</p>
             </div>
             <div className="group">
               <div className="aspect-square bg-white mb-4 overflow-hidden">
                 <img
-                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/files/5f182216-b805-4826-922e-8e0238202153.jpg"
-                  alt="Кастомные проекты"
+                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/94b89e6e-79a4-4ee7-8b39-ae8d8ea45ae8.jpg"
+                  alt="Реставрация и хранение"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <h3 className="text-xl font-bold mb-2">Кастомные проекты</h3>
-              <p className="text-neutral-400">Нестандартные решения — цвет, детали, характер. Под запрос клиента</p>
+              <h3 className="text-xl font-bold mb-2">Реставрация и хранение</h3>
+              <p className="text-neutral-400">Возвращаем классику к жизни и бережно храним в межсезонье</p>
             </div>
           </div>
         </div>
