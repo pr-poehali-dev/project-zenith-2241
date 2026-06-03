@@ -3,9 +3,13 @@ export default function Index() {
     <main className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-white border-b border-black">
-        <div className="container mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
-          <a href="/" className="text-xl font-bold tracking-tighter">
-            ONLY VESPA
+        <div className="container mx-auto px-4 md:px-8 py-2 flex justify-between items-center">
+          <a href="/" className="flex items-center">
+            <img
+              src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/930e51b0-10f5-4881-8103-5c3605ce11a3.png"
+              alt="Only Vespa Moscow"
+              className="h-12 w-auto"
+            />
           </a>
           <div className="flex space-x-8">
             <a href="#work" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
@@ -35,13 +39,13 @@ export default function Index() {
             </p>
           </div>
           <div className="col-span-12 md:col-span-5 flex items-center justify-center">
-            <div className="relative w-full aspect-square bg-red-600 overflow-hidden">
+            <div className="relative w-full aspect-square bg-black overflow-hidden">
               <img
-                src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/files/a5cfbabb-dd30-481a-b4c7-4835c961693b.jpg"
-                alt="Only Vespa мастерская"
-                className="w-full h-full object-cover mix-blend-multiply"
+                src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/2c9594dc-95e9-4ffd-ae8e-86bc979e0856.jpg"
+                alt="Михаил и Vespa"
+                className="w-full h-full object-cover"
               />
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-black"></div>
+              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-red-600"></div>
             </div>
           </div>
         </div>
@@ -70,21 +74,23 @@ export default function Index() {
             <div className="group">
               <div className="aspect-square bg-white mb-4 overflow-hidden">
                 <img
-                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/files/5f182216-b805-4826-922e-8e0238202153.jpg"
-                  alt="Парк мопедов"
+                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/55fb4932-33b0-41db-96fe-9707391b4143.jpg"
+                  alt="Кузовные работы"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <h3 className="text-xl font-bold mb-2">Парк клиентских Vespa</h3>
-              <p className="text-neutral-400">Техническое обслуживание и хранение — доверяют самое ценное</p>
+              <h3 className="text-xl font-bold mb-2">Кузовные работы</h3>
+              <p className="text-neutral-400">Покраска, рихтовка, замена панелей — возвращаем первозданный вид</p>
             </div>
 
             {/* Project 3 */}
             <div className="group">
               <div className="aspect-square bg-white mb-4 overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center bg-neutral-100 group-hover:bg-red-600 transition-colors duration-300">
-                  <span className="text-black group-hover:text-white text-8xl font-bold transition-colors duration-300">03</span>
-                </div>
+                <img
+                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/files/5f182216-b805-4826-922e-8e0238202153.jpg"
+                  alt="Кастомные проекты"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
               <h3 className="text-xl font-bold mb-2">Кастомные проекты</h3>
               <p className="text-neutral-400">Нестандартные решения — цвет, детали, характер. Под запрос клиента</p>
@@ -101,7 +107,7 @@ export default function Index() {
               <h2 className="text-6xl font-bold tracking-tighter mb-8">ИСТОРИЯ</h2>
               <div className="aspect-[4/5] bg-neutral-100 relative mb-8 md:mb-0 overflow-hidden">
                 <img
-                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/files/a5cfbabb-dd30-481a-b4c7-4835c961693b.jpg"
+                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/96b417a4-914c-4d15-ab71-c60f17b819bc.jpg"
                   alt="Михаил — основатель Only Vespa"
                   className="w-full h-full object-cover"
                 />
@@ -116,7 +122,7 @@ export default function Index() {
                 Слово расходилось само. Сначала знакомые знакомых, потом незнакомые люди из другого конца города. Каждый мопед, который выезжал из гаража, становился лучшей рекламой.
               </p>
               <p className="mb-6">
-                Сегодня Only Vespa — это настоящая мастерская. Сюда приходят клиенты, которые ценят честный ремонт. И мастера, которые хотят работать там, где уважают ремесло.
+                Сегодня Only Vespa — это настоящая мастерская в Москве. Сюда приходят клиенты, которые ценят честный ремонт. И мастера, которые хотят работать там, где уважают ремесло.
               </p>
               <div className="grid grid-cols-2 gap-4 mt-12">
                 <div>
@@ -144,7 +150,7 @@ export default function Index() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 px-4 md:px-8 bg-red-600 text-white">
+      <section id="contact" className="py-20 px-4 md:px-8 bg-black text-white">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
@@ -152,21 +158,28 @@ export default function Index() {
               <p className="text-xl mb-8">Записаться на ремонт или приехать познакомиться — добро пожаловать.</p>
               <div className="space-y-4">
                 <p className="flex items-center">
-                  <span className="w-24 text-sm uppercase tracking-widest">Почта</span>
-                  <a href="mailto:hello@onlyvespa.ru" className="hover:underline">
-                    hello@onlyvespa.ru
+                  <span className="w-28 text-sm uppercase tracking-widest text-neutral-400">Телефон</span>
+                  <a href="tel:+79175527125" className="hover:text-red-600 transition-colors">
+                    +7 (917) 552-71-25
                   </a>
                 </p>
                 <p className="flex items-center">
-                  <span className="w-24 text-sm uppercase tracking-widest">Телефон</span>
-                  <a href="tel:+74951234567" className="hover:underline">
-                    +7 (495) 123-45-67
+                  <span className="w-28 text-sm uppercase tracking-widest text-neutral-400">Telegram</span>
+                  <a href="https://t.me/shalyap" target="_blank" rel="noreferrer" className="hover:text-red-600 transition-colors">
+                    @shalyap
                   </a>
                 </p>
                 <p className="flex items-center">
-                  <span className="w-24 text-sm uppercase tracking-widest">Адрес</span>
-                  <span>Москва, Россия</span>
+                  <span className="w-28 text-sm uppercase tracking-widest text-neutral-400">Город</span>
+                  <span>Москва</span>
                 </p>
+              </div>
+              <div className="mt-12">
+                <img
+                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/930e51b0-10f5-4881-8103-5c3605ce11a3.png"
+                  alt="Only Vespa Moscow"
+                  className="h-24 w-auto invert"
+                />
               </div>
             </div>
             <div>
@@ -178,19 +191,19 @@ export default function Index() {
                   <input
                     type="text"
                     id="name"
-                    className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-black placeholder-white/50"
+                    className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-red-600 placeholder-white/30 transition-colors"
                     placeholder="Ваше имя"
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm uppercase tracking-widest mb-2">
-                    Почта
+                  <label htmlFor="phone" className="block text-sm uppercase tracking-widest mb-2">
+                    Телефон
                   </label>
                   <input
-                    type="email"
-                    id="email"
-                    className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-black placeholder-white/50"
-                    placeholder="Ваш email"
+                    type="tel"
+                    id="phone"
+                    className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-red-600 placeholder-white/30 transition-colors"
+                    placeholder="+7 (___) ___-__-__"
                   />
                 </div>
                 <div>
@@ -200,13 +213,13 @@ export default function Index() {
                   <textarea
                     id="message"
                     rows={4}
-                    className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-black placeholder-white/50"
+                    className="w-full bg-transparent border-b-2 border-white py-2 px-0 focus:outline-none focus:border-red-600 placeholder-white/30 transition-colors"
                     placeholder="Расскажите о вашей Vespa"
                   ></textarea>
                 </div>
                 <button
                   type="submit"
-                  className="mt-8 px-8 py-3 bg-black text-white text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors"
+                  className="mt-8 px-8 py-3 bg-red-600 text-white text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors"
                 >
                   Отправить
                 </button>
@@ -217,14 +230,11 @@ export default function Index() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 md:px-8 bg-black text-white">
+      <footer className="py-8 px-4 md:px-8 bg-white border-t border-black">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm mb-4 md:mb-0">2025 Only Vespa. Все права защищены.</p>
+          <p className="text-sm mb-4 md:mb-0">2025 Only Vespa Moscow. Все права защищены.</p>
           <div className="flex space-x-8">
-            <a href="#" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
-              Instagram
-            </a>
-            <a href="#" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
+            <a href="https://t.me/shalyap" target="_blank" rel="noreferrer" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
               Telegram
             </a>
           </div>
