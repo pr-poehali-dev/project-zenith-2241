@@ -112,12 +112,12 @@ export default function Index() {
             <div className="group">
               <div className="aspect-square bg-white mb-4 overflow-hidden">
                 <img
-                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/files/b9bcc293-f85a-492b-aa5d-148a8bfbbb1e.jpg"
+                  src="https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/c50b8c32-5032-456a-909e-a31bd5a907a8.jpg"
                   alt="Реставрация Vespa"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <h3 className="text-xl font-bold mb-2">Реставрация Vespa 50S</h3>
+              <h3 className="text-xl font-bold mb-2">Реставрация Vespa</h3>
               <p className="text-neutral-400">Полное восстановление двигателя и кузова — из убитого состояния в музейный вид</p>
             </div>
             <div className="group">
