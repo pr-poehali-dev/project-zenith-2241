@@ -196,6 +196,41 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Social Section */}
+      <section className="py-20 px-4 md:px-8">
+        <div className="container mx-auto">
+          <h2 className="text-6xl font-bold tracking-tighter mb-12">МЫ В СЕТИ</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a
+              href="https://t.me/onlyvesparu"
+              target="_blank"
+              rel="noreferrer"
+              className="group flex items-center gap-6 border border-black p-8 hover:bg-black hover:text-white transition-colors"
+            >
+              <div className="text-5xl font-bold text-red-600 group-hover:text-red-500">TG</div>
+              <div>
+                <p className="text-sm uppercase tracking-widest text-neutral-400 group-hover:text-neutral-300 mb-1">Telegram-канал</p>
+                <p className="text-2xl font-bold">@onlyvesparu</p>
+                <p className="text-sm mt-1 text-neutral-500 group-hover:text-neutral-300">Новости, фото работ, анонсы</p>
+              </div>
+            </a>
+            <a
+              href="https://www.instagram.com/onlyvespa.ru/"
+              target="_blank"
+              rel="noreferrer"
+              className="group flex items-center gap-6 border border-black p-8 hover:bg-black hover:text-white transition-colors"
+            >
+              <div className="text-5xl font-bold text-red-600 group-hover:text-red-500">IG</div>
+              <div>
+                <p className="text-sm uppercase tracking-widest text-neutral-400 group-hover:text-neutral-300 mb-1">Instagram</p>
+                <p className="text-2xl font-bold">@onlyvespa.ru</p>
+                <p className="text-sm mt-1 text-neutral-500 group-hover:text-neutral-300">Фото, видео, закулисье мастерской</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Contact Section */}
       <section id="contact" className="py-20 px-4 md:px-8 bg-black text-white">
         <div className="container mx-auto">
