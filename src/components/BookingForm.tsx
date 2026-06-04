@@ -2,8 +2,32 @@ import { useState } from "react";
 import Icon from "@/components/ui/icon";
 
 const SEND_URL = "https://functions.poehali.dev/489bf1a9-6c48-4e0c-9814-f0b382a5cf65";
+const UPLOAD_URL = "https://functions.poehali.dev/218d18fe-0c18-4826-86b3-965365c023ec";
 
-const SERVICES = ["Диагностика", "Техническое обслуживание", "Ремонт двигателя", "Ремонт после ДТП", "Покраска", "Реставрация", "Другое"];
+const RATE = 4000; // нормо-час, ₽
+
+interface ServiceDef {
+  name: string;
+  price: number; // от, ₽
+  days: string;
+}
+
+const SERVICES: ServiceDef[] = [
+  { name: "Диагностика", price: 2000, days: "1 день" },
+  { name: "Техническое обслуживание", price: 6000, days: "1–2 дня" },
+  { name: "Ремонт двигателя", price: 16000, days: "5–10 дней" },
+  { name: "Ремонт после ДТП", price: 20000, days: "от 1 недели" },
+  { name: "Покраска", price: 8000, days: "3–5 дней" },
+  { name: "Реставрация", price: 40000, days: "от 4 недель" },
+  { name: "Другое", price: 0, days: "после диагностики" },
+];
+
+const MODELS = [
+  "Vespa Primavera", "Vespa Sprint", "Vespa GTS", "Vespa GTV",
+  "Vespa LX", "Vespa LXV", "Vespa Sei Giorni", "Другая Vespa",
+  "Другой скутер / мотороллер",
+];
+
 const TIMES = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
 
 function getDates() {
@@ -12,7 +36,7 @@ function getDates() {
   for (let i = 1; i <= 14; i++) {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
-    if (d.getDay() === 0) continue; // выходной воскресенье
+    if (d.getDay() === 0) continue;
     dates.push({
       value: d.toISOString().slice(0, 10),
       label: d.toLocaleDateString("ru-RU", { day: "2-digit", month: "short" }),
@@ -22,30 +46,86 @@ function getDates() {
   return dates;
 }
 
+const CURRENT_YEAR = new Date().getFullYear();
+const YEARS = Array.from({ length: 30 }, (_, i) => CURRENT_YEAR - i);
+
 export default function BookingForm() {
   const dates = getDates();
   const [service, setService] = useState("");
+  const [model, setModel] = useState("");
+  const [year, setYear] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [photoUploading, setPhotoUploading] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [trackCode, setTrackCode] = useState("");
 
+  const chosen = SERVICES.find(s => s.name === service);
+
   const step1 = service !== "";
-  const step2 = step1 && date !== "" && time !== "";
-  const canSubmit = step2 && name.trim() !== "" && phone.trim() !== "";
+  const step2 = step1 && model !== "" && year !== "";
+  const step3 = step2 && date !== "" && time !== "";
+  const canSubmit = step3 && name.trim() !== "" && phone.trim() !== "" && !photoUploading;
+
+  async function uploadPhoto(file: File) {
+    if (file.size > 8 * 1024 * 1024) {
+      alert("Фото слишком большое (максимум 8 МБ)");
+      return;
+    }
+    setPhotoUploading(true);
+    try {
+      const b64: string = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      const res = await fetch(UPLOAD_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ file: b64, content_type: file.type || "image/jpeg" }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setPhotoUrl(data.url || "");
+      } else {
+        alert("Не удалось загрузить фото. Попробуйте другое.");
+      }
+    } catch {
+      alert("Не удалось загрузить фото.");
+    } finally {
+      setPhotoUploading(false);
+    }
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("loading");
     const dateLabel = dates.find(d => d.value === date)?.label || date;
-    const message = `Онлайн-запись на ремонт.\nУслуга: ${service}\nДата: ${dateLabel}, ${time}`;
+    const estPrice = chosen && chosen.price > 0 ? chosen.price : null;
+    const estDays = chosen?.days || "";
+    const message =
+      `Онлайн-запись на ремонт.\n` +
+      `Услуга: ${service}\n` +
+      `Мопед: ${model}${year ? `, ${year} г.` : ""}\n` +
+      `Запись: ${dateLabel}, ${time}\n` +
+      (estPrice ? `Примерная стоимость: от ${estPrice.toLocaleString("ru-RU")} ₽\n` : "") +
+      `Примерный срок: ${estDays}` +
+      (photoUrl ? `\nФото: ${photoUrl}` : "");
+
     try {
       const res = await fetch(SEND_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, message }),
+        body: JSON.stringify({
+          name, phone, message, service, model,
+          year: year || null, photo_url: photoUrl || null,
+          visit_date: dateLabel, visit_time: time,
+          est_price: estPrice, est_days: estDays,
+        }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -57,6 +137,11 @@ export default function BookingForm() {
     } catch {
       setStatus("error");
     }
+  }
+
+  function reset() {
+    setStatus("idle"); setService(""); setModel(""); setYear("");
+    setDate(""); setTime(""); setName(""); setPhone(""); setPhotoUrl("");
   }
 
   if (status === "success") {
@@ -81,7 +166,7 @@ export default function BookingForm() {
                 Отследить заявку
               </a>
               <button
-                onClick={() => { setStatus("idle"); setService(""); setDate(""); setTime(""); setName(""); setPhone(""); }}
+                onClick={reset}
                 className="px-6 py-3 border border-black text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-colors"
               >
                 Записаться снова
@@ -98,7 +183,7 @@ export default function BookingForm() {
       <div className="container mx-auto max-w-3xl">
         <h2 className="text-6xl font-bold tracking-tighter mb-4">ЗАПИСЬ</h2>
         <p className="text-neutral-500 mb-12">
-          Выберите услугу, удобную дату и время — мастер подтвердит запись.
+          Выберите услугу и мопед, прикрепите фото, выберите дату и время — мастер подтвердит запись.
         </p>
 
         <form onSubmit={submit} className="space-y-10">
@@ -112,23 +197,78 @@ export default function BookingForm() {
               {SERVICES.map(s => (
                 <button
                   type="button"
-                  key={s}
-                  onClick={() => setService(s)}
+                  key={s.name}
+                  onClick={() => setService(s.name)}
                   className={`px-4 py-2.5 text-sm border transition-colors ${
-                    service === s ? "bg-red-600 text-white border-red-600" : "bg-white border-neutral-300 hover:border-black"
+                    service === s.name ? "bg-red-600 text-white border-red-600" : "bg-white border-neutral-300 hover:border-black"
                   }`}
                 >
-                  {s}
+                  {s.name}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Step 2: date + time */}
+          {/* Step 2: model + year + photo */}
           <div className={step1 ? "" : "opacity-40 pointer-events-none"}>
             <p className="flex items-center gap-2 text-sm uppercase tracking-widest mb-4">
               <span className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-xs">2</span>
-              Дата и время
+              Ваш мопед
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <select
+                value={model}
+                onChange={e => setModel(e.target.value)}
+                className="bg-white border border-neutral-300 px-4 py-3 focus:outline-none focus:border-red-600 transition-colors"
+              >
+                <option value="">Модель мопеда</option>
+                {MODELS.map(m => <option key={m} value={m}>{m}</option>)}
+              </select>
+              <select
+                value={year}
+                onChange={e => setYear(e.target.value)}
+                className="bg-white border border-neutral-300 px-4 py-3 focus:outline-none focus:border-red-600 transition-colors"
+              >
+                <option value="">Год выпуска</option>
+                {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+              </select>
+            </div>
+
+            {/* Photo upload */}
+            <div>
+              <p className="text-sm text-neutral-500 mb-2">Фото мопеда (необязательно, поможет мастеру оценить)</p>
+              {photoUrl ? (
+                <div className="flex items-center gap-4">
+                  <img src={photoUrl} alt="Фото мопеда" className="w-24 h-24 object-cover border border-neutral-300" />
+                  <button
+                    type="button"
+                    onClick={() => setPhotoUrl("")}
+                    className="text-sm text-red-600 flex items-center gap-1 hover:underline"
+                  >
+                    <Icon name="X" size={15} /> Удалить
+                  </button>
+                </div>
+              ) : (
+                <label className={`inline-flex items-center gap-2 px-4 py-3 border border-dashed border-neutral-400 cursor-pointer hover:border-black transition-colors text-sm ${photoUploading ? "opacity-60" : ""}`}>
+                  <Icon name={photoUploading ? "Loader" : "ImagePlus"} size={18} className={photoUploading ? "animate-spin" : ""} />
+                  {photoUploading ? "Загрузка…" : "Прикрепить фото"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    disabled={photoUploading}
+                    onChange={e => { const f = e.target.files?.[0]; if (f) uploadPhoto(f); }}
+                  />
+                </label>
+              )}
+            </div>
+          </div>
+
+          {/* Step 3: date + time */}
+          <div className={step2 ? "" : "opacity-40 pointer-events-none"}>
+            <p className="flex items-center gap-2 text-sm uppercase tracking-widest mb-4">
+              <span className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-xs">3</span>
+              Дата и время <span className="text-red-600">*</span>
             </p>
             <div className="flex gap-2 overflow-x-auto pb-3 mb-4">
               {dates.map(d => (
@@ -161,10 +301,32 @@ export default function BookingForm() {
             </div>
           </div>
 
-          {/* Step 3: contacts */}
-          <div className={step2 ? "" : "opacity-40 pointer-events-none"}>
+          {/* Estimate */}
+          {chosen && (
+            <div className="bg-black text-white p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <Icon name="Calculator" size={28} className="text-red-500 shrink-0" />
+                <div>
+                  <p className="text-sm uppercase tracking-widest text-neutral-400">Примерная стоимость</p>
+                  <p className="text-3xl font-bold tracking-tighter">
+                    {chosen.price > 0 ? `от ${chosen.price.toLocaleString("ru-RU")} ₽` : "после диагностики"}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Icon name="Clock" size={28} className="text-red-500 shrink-0" />
+                <div>
+                  <p className="text-sm uppercase tracking-widest text-neutral-400">Примерный срок</p>
+                  <p className="text-2xl font-bold tracking-tighter">{chosen.days}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 4: contacts */}
+          <div className={step3 ? "" : "opacity-40 pointer-events-none"}>
             <p className="flex items-center gap-2 text-sm uppercase tracking-widest mb-4">
-              <span className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-xs">3</span>
+              <span className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-xs">4</span>
               Ваши контакты
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -196,10 +358,11 @@ export default function BookingForm() {
             disabled={!canSubmit || status === "loading"}
             className="w-full sm:w-auto px-10 py-4 bg-black text-white text-sm uppercase tracking-widest font-bold hover:bg-red-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            {status === "loading"
-              ? <><Icon name="Loader" size={16} className="animate-spin" />Записываем...</>
-              : <><Icon name="CalendarCheck" size={16} />Записаться на ремонт</>}
+            {status === "loading" ? "Отправляем…" : "Записаться на ремонт"}
           </button>
+          <p className="text-xs text-neutral-400">
+            Стоимость и срок ориентировочные, без учёта запчастей. Точный расчёт мастер назовёт после диагностики.
+          </p>
         </form>
       </div>
     </section>

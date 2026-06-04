@@ -1,0 +1,9 @@
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS service text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS model text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS year integer;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS photo_url text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS visit_date text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS visit_time text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS est_price integer;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS est_days text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS bitrix_id text;

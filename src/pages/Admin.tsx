@@ -11,6 +11,16 @@ interface Lead {
   created_at: string;
   status: LeadStatus;
   note: string | null;
+  track_code?: string | null;
+  service?: string | null;
+  model?: string | null;
+  year?: number | null;
+  photo_url?: string | null;
+  visit_date?: string | null;
+  visit_time?: string | null;
+  est_price?: number | null;
+  est_days?: string | null;
+  bitrix_id?: string | null;
 }
 
 const GET_LEADS_URL = "https://functions.poehali.dev/b73dae70-50b0-4466-bb13-f72076056498";
@@ -134,9 +144,13 @@ export default function Admin() {
   }
 
   function exportCSV() {
-    const header = ["Имя", "Телефон", "Сообщение", "Статус", "Заметка", "Дата"];
+    const header = ["Имя", "Телефон", "Услуга", "Модель", "Год", "Запись", "Стоимость от", "Срок", "Фото", "Битрикс ID", "Статус", "Заметка", "Дата"];
     const rows = filtered.map(l => [
-      l.name, l.phone, l.message || "", STATUS_CONFIG[l.status].label, l.note || "", formatDate(l.created_at),
+      l.name, l.phone, l.service || "", l.model || "", l.year || "",
+      [l.visit_date, l.visit_time].filter(Boolean).join(" "),
+      l.est_price ? `${l.est_price} ₽` : "", l.est_days || "",
+      l.photo_url || "", l.bitrix_id || "",
+      STATUS_CONFIG[l.status].label, l.note || "", formatDate(l.created_at),
     ].map(c => `"${String(c).replace(/"/g, '""')}"`).join(";"));
     const csv = "\uFEFF" + [header.join(";"), ...rows].join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
@@ -353,6 +367,49 @@ export default function Admin() {
                     </div>
 
                     <div className="flex-1 min-w-0 space-y-2">
+                      {/* Детали заявки */}
+                      {(lead.service || lead.model || lead.visit_date || lead.est_price || lead.photo_url) && (
+                        <div className="flex flex-wrap items-start gap-3 mb-1">
+                          {lead.photo_url && (
+                            <a href={lead.photo_url} target="_blank" rel="noopener noreferrer" className="shrink-0">
+                              <img src={lead.photo_url} alt="Фото мопеда" className="w-16 h-16 object-cover border border-neutral-800 hover:border-neutral-600 transition-colors" />
+                            </a>
+                          )}
+                          <div className="flex flex-wrap gap-1.5">
+                            {lead.service && (
+                              <span className="inline-flex items-center gap-1 text-xs bg-neutral-800 text-neutral-200 px-2 py-1">
+                                <Icon name="Wrench" size={11} className="text-red-500" />{lead.service}
+                              </span>
+                            )}
+                            {lead.model && (
+                              <span className="inline-flex items-center gap-1 text-xs bg-neutral-800 text-neutral-200 px-2 py-1">
+                                <Icon name="Bike" size={11} className="text-red-500" />{lead.model}{lead.year ? `, ${lead.year}` : ""}
+                              </span>
+                            )}
+                            {(lead.visit_date || lead.visit_time) && (
+                              <span className="inline-flex items-center gap-1 text-xs bg-neutral-800 text-neutral-200 px-2 py-1">
+                                <Icon name="CalendarClock" size={11} className="text-red-500" />{[lead.visit_date, lead.visit_time].filter(Boolean).join(", ")}
+                              </span>
+                            )}
+                            {lead.est_price ? (
+                              <span className="inline-flex items-center gap-1 text-xs bg-green-500/15 text-green-400 px-2 py-1">
+                                <Icon name="Banknote" size={11} />от {lead.est_price.toLocaleString("ru-RU")} ₽
+                              </span>
+                            ) : null}
+                            {lead.est_days && (
+                              <span className="inline-flex items-center gap-1 text-xs bg-neutral-800 text-neutral-400 px-2 py-1">
+                                <Icon name="Clock" size={11} />{lead.est_days}
+                              </span>
+                            )}
+                            {lead.bitrix_id && (
+                              <span className="inline-flex items-center gap-1 text-xs bg-blue-500/15 text-blue-400 px-2 py-1">
+                                <Icon name="CheckCircle" size={11} />Битрикс #{lead.bitrix_id}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
                       {lead.message
                         ? <p className="text-neutral-400 text-sm leading-relaxed">{lead.message}</p>
                         : <p className="text-neutral-700 text-sm italic">Без сообщения</p>}
