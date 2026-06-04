@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "No code - 400",
+      "method": "POST",
+      "path": "/",
+      "body": {},
+      "expectedStatus": 400
+    },
+    {
+      "name": "Unknown code - 404",
+      "method": "POST",
+      "path": "/",
+      "body": {"code": "ZZZZZZ"},
+      "expectedStatus": 404
+    }
+  ]
+}

@@ -1,10 +1,19 @@
 import { useState } from "react";
+import PriceCalculator from "@/components/PriceCalculator";
+import PriceList from "@/components/PriceList";
+import FAQ from "@/components/FAQ";
+import Reviews from "@/components/Reviews";
+import Gallery from "@/components/Gallery";
+import BookingForm from "@/components/BookingForm";
+import ScrollProgress from "@/components/ScrollProgress";
+import FloatingActions from "@/components/FloatingActions";
 
 export default function Index() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [trackCode, setTrackCode] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -16,6 +25,8 @@ export default function Index() {
         body: JSON.stringify({ name, phone, message }),
       });
       if (res.ok) {
+        const data = await res.json();
+        setTrackCode(data.track_code || "");
         setStatus("success");
         setName(""); setPhone(""); setMessage("");
       } else {
@@ -28,6 +39,8 @@ export default function Index() {
 
   return (
     <main className="min-h-screen bg-white">
+      <ScrollProgress />
+      <FloatingActions />
       {/* Navigation */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-white border-b border-black">
         <div className="container mx-auto px-4 md:px-8 py-2 flex justify-between items-center">
@@ -38,20 +51,16 @@ export default function Index() {
               className="h-12 w-auto"
             />
           </a>
-          <div className="flex space-x-8">
-            <a href="#services" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
-              Услуги
-            </a>
-            <a href="#work" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
-              Работы
-            </a>
-            <a href="#about" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
-              История
-            </a>
-            <a href="#contact" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
-              Контакты
-            </a>
+          <div className="hidden lg:flex items-center space-x-6">
+            <a href="#services" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">Услуги</a>
+            <a href="#prices" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">Цены</a>
+            <a href="#gallery" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">Галерея</a>
+            <a href="#reviews" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">Отзывы</a>
+            <a href="#faq" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">Вопросы</a>
+            <a href="/track" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">Отследить</a>
+            <a href="#booking" className="text-sm uppercase tracking-widest bg-red-600 text-white px-4 py-2 hover:bg-black transition-colors">Записаться</a>
           </div>
+          <a href="#booking" className="lg:hidden text-sm uppercase tracking-widest bg-red-600 text-white px-4 py-2 hover:bg-black transition-colors">Записаться</a>
         </div>
       </nav>
 
@@ -103,6 +112,12 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Calculator */}
+      <PriceCalculator />
+
+      {/* Price List */}
+      <PriceList />
+
       {/* Work Section */}
       <section id="work" className="py-20 px-4 md:px-8 bg-black text-white">
         <div className="container mx-auto">
@@ -144,6 +159,9 @@ export default function Index() {
           </div>
         </div>
       </section>
+
+      {/* Gallery */}
+      <Gallery />
 
       {/* About Section */}
       <section id="about" className="py-20 px-4 md:px-8">
@@ -194,6 +212,15 @@ export default function Index() {
           </div>
         </div>
       </section>
+
+      {/* Reviews */}
+      <Reviews />
+
+      {/* Booking */}
+      <BookingForm />
+
+      {/* FAQ */}
+      <FAQ />
 
       {/* Social Section */}
       <section className="py-20 px-4 md:px-8">
@@ -278,12 +305,30 @@ export default function Index() {
                 <div className="flex flex-col items-start justify-center h-full space-y-4">
                   <p className="text-4xl font-bold tracking-tighter">Заявка отправлена!</p>
                   <p className="text-neutral-400">Михаил свяжется с тобой в ближайшее время.</p>
-                  <button
-                    onClick={() => setStatus("idle")}
-                    className="mt-4 px-8 py-3 border border-white text-white text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors"
-                  >
-                    Отправить ещё
-                  </button>
+                  {trackCode && (
+                    <div className="w-full border border-neutral-700 p-6 mt-2">
+                      <p className="text-xs uppercase tracking-widest text-neutral-400 mb-2">Код отслеживания</p>
+                      <p className="text-4xl font-bold tracking-[0.3em] text-red-500">{trackCode}</p>
+                      <p className="text-sm text-neutral-500 mt-3">
+                        Сохраните код — по нему можно проверить статус заявки на странице{" "}
+                        <a href="/track" className="text-white underline hover:text-red-500">«Отследить заявку»</a>.
+                      </p>
+                    </div>
+                  )}
+                  <div className="flex flex-wrap gap-3 mt-4">
+                    <a
+                      href="/track"
+                      className="px-8 py-3 bg-red-600 text-white text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors"
+                    >
+                      Отследить заявку
+                    </a>
+                    <button
+                      onClick={() => setStatus("idle")}
+                      className="px-8 py-3 border border-white text-white text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors"
+                    >
+                      Отправить ещё
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form className="space-y-6" onSubmit={handleSubmit}>
@@ -394,6 +439,9 @@ export default function Index() {
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm mb-4 md:mb-0">2025 Only Vespa Moscow. Все права защищены.</p>
           <div className="flex space-x-8">
+            <a href="/track" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
+              Отследить заявку
+            </a>
             <a href="https://t.me/Only_vespa_bot" target="_blank" rel="noreferrer" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">
               Бот
             </a>
