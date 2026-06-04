@@ -3,14 +3,14 @@ import os
 import psycopg2
 
 def handler(event: dict, context) -> dict:
-    """Получение списка заявок для админки Only Vespa"""
+    """Обновление статуса заявки в админке Only Vespa"""
     if event.get('httpMethod') == 'OPTIONS':
         return {
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Password',
+                'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Max-Age': '86400'
             },
             'body': ''
@@ -18,6 +18,9 @@ def handler(event: dict, context) -> dict:
 
     body = json.loads(event.get('body') or '{}')
     password = body.get('password', '')
+    lead_id = body.get('id')
+    new_status = body.get('status', '')
+
     if password != os.environ['ADMIN_PASSWORD']:
         return {
             'statusCode': 401,
@@ -25,27 +28,22 @@ def handler(event: dict, context) -> dict:
             'body': json.dumps({'error': 'unauthorized'})
         }
 
+    if not lead_id or new_status not in ('new', 'in_progress', 'done'):
+        return {
+            'statusCode': 400,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': 'invalid params'})
+        }
+
     conn = psycopg2.connect(os.environ['DATABASE_URL'])
     cur = conn.cursor()
-    cur.execute("SELECT id, name, phone, message, created_at, status FROM leads ORDER BY created_at DESC")
-    rows = cur.fetchall()
+    cur.execute("UPDATE leads SET status = %s WHERE id = %s", (new_status, lead_id))
+    conn.commit()
     cur.close()
     conn.close()
-
-    leads = [
-        {
-            'id': r[0],
-            'name': r[1],
-            'phone': r[2],
-            'message': r[3],
-            'created_at': r[4].isoformat() if r[4] else None,
-            'status': r[5] or 'new'
-        }
-        for r in rows
-    ]
 
     return {
         'statusCode': 200,
         'headers': {'Access-Control-Allow-Origin': '*'},
-        'body': json.dumps({'leads': leads})
+        'body': json.dumps({'ok': True})
     }
