@@ -1,6 +1,5 @@
 import { useState } from "react";
 import PriceCalculator from "@/components/PriceCalculator";
-import PriceList from "@/components/PriceList";
 import FAQ from "@/components/FAQ";
 import Reviews from "@/components/Reviews";
 import Gallery from "@/components/Gallery";
@@ -53,7 +52,7 @@ export default function Index() {
           </a>
           <div className="hidden lg:flex items-center space-x-6">
             <a href="#services" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">Услуги</a>
-            <a href="#prices" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">Цены</a>
+            <a href="#calculator" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">Расчёт</a>
             <a href="#gallery" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">Галерея</a>
             <a href="#reviews" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">Отзывы</a>
             <a href="#faq" className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors">Вопросы</a>
@@ -114,9 +113,6 @@ export default function Index() {
 
       {/* Calculator */}
       <PriceCalculator />
-
-      {/* Price List */}
-      <PriceList />
 
       {/* Work Section */}
       <section id="work" className="py-20 px-4 md:px-8 bg-black text-white">
