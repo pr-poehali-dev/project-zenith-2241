@@ -3,7 +3,7 @@ import os
 import psycopg2
 
 def handler(event: dict, context) -> dict:
-    """Обновление статуса заявки в админке Only Vespa"""
+    """Обновление статуса/заметки/удаление заявки в админке Only Vespa"""
     if event.get('httpMethod') == 'OPTIONS':
         return {
             'statusCode': 200,
@@ -18,8 +18,8 @@ def handler(event: dict, context) -> dict:
 
     body = json.loads(event.get('body') or '{}')
     password = body.get('password', '')
+    action = body.get('action', 'status')
     lead_id = body.get('id')
-    new_status = body.get('status', '')
 
     if password != os.environ['ADMIN_PASSWORD']:
         return {
@@ -28,7 +28,7 @@ def handler(event: dict, context) -> dict:
             'body': json.dumps({'error': 'unauthorized'})
         }
 
-    if not lead_id or new_status not in ('new', 'in_progress', 'done'):
+    if not lead_id:
         return {
             'statusCode': 400,
             'headers': {'Access-Control-Allow-Origin': '*'},
@@ -37,7 +37,32 @@ def handler(event: dict, context) -> dict:
 
     conn = psycopg2.connect(os.environ['DATABASE_URL'])
     cur = conn.cursor()
-    cur.execute("UPDATE leads SET status = %s WHERE id = %s", (new_status, lead_id))
+
+    if action == 'status':
+        new_status = body.get('status', '')
+        if new_status not in ('new', 'in_progress', 'done', 'cancelled'):
+            cur.close()
+            conn.close()
+            return {
+                'statusCode': 400,
+                'headers': {'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({'error': 'invalid status'})
+            }
+        cur.execute("UPDATE leads SET status = %s WHERE id = %s", (new_status, lead_id))
+    elif action == 'note':
+        note = (body.get('note') or '').strip() or None
+        cur.execute("UPDATE leads SET note = %s WHERE id = %s", (note, lead_id))
+    elif action == 'delete':
+        cur.execute("DELETE FROM leads WHERE id = %s", (lead_id,))
+    else:
+        cur.close()
+        conn.close()
+        return {
+            'statusCode': 400,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': 'unknown action'})
+        }
+
     conn.commit()
     cur.close()
     conn.close()

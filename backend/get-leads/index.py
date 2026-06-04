@@ -27,7 +27,7 @@ def handler(event: dict, context) -> dict:
 
     conn = psycopg2.connect(os.environ['DATABASE_URL'])
     cur = conn.cursor()
-    cur.execute("SELECT id, name, phone, message, created_at, status FROM leads ORDER BY created_at DESC")
+    cur.execute("SELECT id, name, phone, message, created_at, status, note FROM leads ORDER BY created_at DESC")
     rows = cur.fetchall()
     cur.close()
     conn.close()
@@ -39,7 +39,8 @@ def handler(event: dict, context) -> dict:
             'phone': r[2],
             'message': r[3],
             'created_at': r[4].isoformat() if r[4] else None,
-            'status': r[5] or 'new'
+            'status': r[5] or 'new',
+            'note': r[6]
         }
         for r in rows
     ]
