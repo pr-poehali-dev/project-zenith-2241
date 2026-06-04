@@ -21,18 +21,8 @@ const SERVICES: Service[] = [
   { id: "electric", label: "Электрика", hours: 2, icon: "Zap" },
 ];
 
-const URGENCY = [
-  { id: "normal", label: "Обычная", mult: 1 },
-  { id: "fast", label: "Срочно (+30%)", mult: 1.3 },
-];
-
-function fmtHours(h: number) {
-  return h % 1 === 0 ? `${h} ч` : `${h.toString().replace(".", ",")} ч`;
-}
-
 export default function PriceCalculator() {
   const [selected, setSelected] = useState<string[]>([]);
-  const [urgency, setUrgency] = useState("normal");
 
   function toggle(id: string) {
     setSelected(prev => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
@@ -40,8 +30,7 @@ export default function PriceCalculator() {
 
   const chosen = SERVICES.filter(s => selected.includes(s.id));
   const totalHours = chosen.reduce((sum, s) => sum + s.hours, 0);
-  const mult = URGENCY.find(u => u.id === urgency)!.mult;
-  const total = Math.round(totalHours * RATE * mult);
+  const total = Math.round(totalHours * RATE);
 
   return (
     <section id="calculator" className="py-20 px-4 md:px-8 bg-white">
@@ -80,30 +69,12 @@ export default function PriceCalculator() {
                     <div className="flex-1">
                       <p className="font-bold leading-tight">{s.label}</p>
                       <p className={`text-sm mt-1 ${active ? "text-neutral-400" : "text-neutral-500"}`}>
-                        ~ {fmtHours(s.hours)} · {(s.hours * RATE).toLocaleString("ru-RU")} ₽
+                        от {(s.hours * RATE).toLocaleString("ru-RU")} ₽*
                       </p>
                     </div>
                   </button>
                 );
               })}
-            </div>
-
-            {/* Urgency */}
-            <div className="mt-6">
-              <p className="text-sm uppercase tracking-widest mb-3 text-neutral-500">Срочность</p>
-              <div className="flex gap-3">
-                {URGENCY.map(u => (
-                  <button
-                    key={u.id}
-                    onClick={() => setUrgency(u.id)}
-                    className={`px-5 py-2.5 border text-sm transition-colors ${
-                      urgency === u.id ? "bg-red-600 text-white border-red-600" : "border-black hover:bg-neutral-50"
-                    }`}
-                  >
-                    {u.label}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
 
@@ -111,12 +82,12 @@ export default function PriceCalculator() {
           <div className="bg-black text-white p-8 flex flex-col h-fit lg:sticky lg:top-24">
             <p className="text-sm uppercase tracking-widest text-neutral-400 mb-2">Примерная стоимость</p>
             <p className="text-5xl font-bold tracking-tighter mb-1">
-              {total > 0 ? `${total.toLocaleString("ru-RU")} ₽` : "—"}
+              {total > 0 ? `от ${total.toLocaleString("ru-RU")} ₽` : "—"}
             </p>
             <p className="text-neutral-500 text-sm mb-6">
               {selected.length === 0
                 ? "Выберите работы"
-                : `${fmtHours(totalHours)} работы · ${RATE.toLocaleString("ru-RU")} ₽/час`}
+                : `Выбрано работ: ${chosen.length}`}
             </p>
 
             {chosen.length > 0 && (
@@ -124,15 +95,9 @@ export default function PriceCalculator() {
                 {chosen.map(s => (
                   <div key={s.id} className="flex justify-between text-sm text-neutral-300">
                     <span>{s.label}</span>
-                    <span className="text-neutral-500 whitespace-nowrap ml-3">{fmtHours(s.hours)}</span>
+                    <span className="text-neutral-500 whitespace-nowrap ml-3">от {(s.hours * RATE).toLocaleString("ru-RU")} ₽</span>
                   </div>
                 ))}
-                {mult > 1 && (
-                  <div className="flex justify-between text-sm text-red-500 pt-1">
-                    <span>Срочность</span>
-                    <span>+30%</span>
-                  </div>
-                )}
               </div>
             )}
 
@@ -143,7 +108,7 @@ export default function PriceCalculator() {
               Записаться на ремонт
             </a>
             <p className="text-xs text-neutral-600 mt-4 text-center">
-              Цены ориентировочные, без учёта запчастей. Финальный расчёт — после осмотра.
+              * Цены ориентировочные, без учёта запчастей. Финальный расчёт — после осмотра.
             </p>
           </div>
         </div>

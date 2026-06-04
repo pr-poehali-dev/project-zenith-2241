@@ -13,6 +13,11 @@ const IMAGES = [
   "https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/c8481cda-06af-4af8-b859-021ce38b2271.jpg",
   "https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/94b89e6e-79a4-4ee7-8b39-ae8d8ea45ae8.jpg",
   "https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/96b417a4-914c-4d15-ab71-c60f17b819bc.jpg",
+  "https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/46da66d7-0c2e-4683-bf1a-d5e6e361cbde.jpg",
+  "https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/cf1de4c6-a111-4b61-968f-c2e3cf3b6dec.jpg",
+  "https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/346d9b6d-3afe-4c8e-9d69-c54254b0d2a0.jpg",
+  "https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/184dd1d1-b8c2-4ddf-9a8a-5cc59406d8bc.jpg",
+  "https://cdn.poehali.dev/projects/3c873831-aefa-41ea-a721-61970b3851b2/bucket/96c37223-3c58-4eab-8aa7-df5e558a6693.jpg",
 ];
 
 const WORKS: Work[] = [
@@ -20,8 +25,11 @@ const WORKS: Work[] = [
   { title: "Капитальное ТО GTS 300", desc: "Разобрали до винтика, почистили, отрегулировали — как после завода", category: "ТО", img: IMAGES[1] },
   { title: "Зимнее хранение", desc: "Консервация и бережное хранение классики в межсезонье", category: "Хранение", img: IMAGES[2] },
   { title: "Восстановление LX 125", desc: "Вернули к жизни винтажный мотороллер после долгого простоя", category: "Реставрация", img: IMAGES[3] },
-  { title: "Покраска после ДТП", desc: "Восстановление геометрии и покраска пластиковых элементов", category: "ДТП", img: IMAGES[0] },
-  { title: "Ремонт двигателя Sprint", desc: "Капитальный ремонт силового агрегата с заменой расходников", category: "Ремонт", img: IMAGES[1] },
+  { title: "Тюнинг Vespa GTS", desc: "Чёрная Vespa GTS — полное ТО и подготовка к сезону", category: "ТО", img: IMAGES[4] },
+  { title: "Кастом GTS «Racing»", desc: "Зелёная Vespa с жёлтыми полосами и литыми дисками — кузовной ремонт после ДТП и кастом", category: "ДТП", img: IMAGES[5] },
+  { title: "Юбилейная GTS 75th", desc: "Ремонт и обслуживание лимитированной Vespa 75th Anniversary", category: "Ремонт", img: IMAGES[6] },
+  { title: "Подготовка GTS Touring", desc: "Серебристая Vespa GTS с багажником — комплексное ТО", category: "ТО", img: IMAGES[7] },
+  { title: "Ремонт двигателя GTS 300", desc: "Капитальный ремонт силового агрегата тёмно-синей Vespa с заменой расходников", category: "Ремонт", img: IMAGES[8] },
 ];
 
 const CATEGORIES = ["Все", "Реставрация", "ТО", "Ремонт", "ДТП", "Хранение"];

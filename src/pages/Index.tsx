@@ -73,7 +73,7 @@ export default function Index() {
               VESPA
             </h1>
             <p className="text-xl max-w-xl">
-              Мастерская, которая начиналась с гаража и идеи. Сегодня — место, куда привозят Vespa и знают, что её вернут живой.
+              Мастерская, которая начиналась с увлечения и идеи. Сегодня — место, куда привозят Vespa и знают, что её вернут исправной.
             </p>
           </div>
           <div className="col-span-12 md:col-span-5 flex items-center justify-center">
@@ -282,6 +282,7 @@ export default function Index() {
                     rel="noreferrer"
                     className="hover:text-red-600 transition-colors"
                   >
+                    г. Москва<br />
                     м. Зорге (МЦК)<br />
                     3-я Хорошёвская ул., 19к2<br />
                     ГСК «Автомобилист-старт»
