@@ -25,67 +25,12 @@ def handler(event: dict, context) -> dict:
             'body': json.dumps({'error': 'unauthorized'})
         }
 
-    if body.get('inspect'):
-        import urllib.request
-        import urllib.error
-
-        def _call(webhook, method, params=None):
-            if not webhook.endswith('/'):
-                webhook += '/'
-            u = webhook + method + '.json'
-            d = json.dumps(params or {}).encode('utf-8')
-            r = urllib.request.Request(u, data=d, headers={'Content-Type': 'application/json'})
-            with urllib.request.urlopen(r, timeout=20) as resp:
-                return json.loads(resp.read().decode('utf-8'))
-
-        webhook = os.environ.get('BITRIX_WEBHOOK_URL', '').strip()
-        if not webhook:
-            return {'statusCode': 400, 'headers': {'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps({'error': 'BITRIX_WEBHOOK_URL is empty'})}
-        def _safe(method, params=None):
-            try:
-                return _call(webhook, method, params)
-            except urllib.error.HTTPError as he:
-                try:
-                    return {'__http_error__': he.code, '__body__': he.read().decode('utf-8')}
-                except Exception:
-                    return {'__http_error__': he.code}
-            except Exception as e:
-                return {'__error__': str(e)}
-
-        out = {}
-        out['profile'] = _safe('profile')
-        out['type_list_raw'] = _safe('crm.type.list')
-        types = out['type_list_raw'].get('result', {}).get('types', []) if isinstance(out['type_list_raw'].get('result'), dict) else []
-        out['smart_processes'] = [
-            {'entityTypeId': t.get('entityTypeId'), 'title': t.get('title')} for t in types
-        ]
-        out['fields'] = {}
-        for t in types:
-            etid = t.get('entityTypeId')
-            try:
-                f = _call(webhook, 'crm.item.fields', {'entityTypeId': etid})
-                fields = f.get('result', {}).get('fields', {})
-                out['fields'][str(etid)] = {
-                    'title': t.get('title'),
-                    'fields': {
-                        c: {'title': m.get('title'), 'type': m.get('type'),
-                            'isRequired': m.get('isRequired'),
-                            'items': [i.get('VALUE') for i in (m.get('items') or [])] if m.get('items') else None}
-                        for c, m in fields.items()
-                    }
-                }
-            except Exception as e:
-                out['fields'][str(etid)] = {'error': str(e)}
-        return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps(out, ensure_ascii=False)}
-
     conn = psycopg2.connect(os.environ['DATABASE_URL'])
     cur = conn.cursor()
     cur.execute(
         """SELECT id, name, phone, message, created_at, status, note, track_code,
                   service, model, year, photo_url, visit_date, visit_time,
-                  est_price, est_days, bitrix_id, stage, problem, vin, mileage,
+                  est_price, est_days, stage, problem, vin, mileage,
                   diagnosis, work_cost, parts_cost, prepayment, mechanic,
                   accept_date, ready_date, payment_status, photos
            FROM leads ORDER BY created_at DESC"""
@@ -122,20 +67,19 @@ def handler(event: dict, context) -> dict:
             'visit_time': r[13],
             'est_price': r[14],
             'est_days': r[15],
-            'bitrix_id': r[16],
-            'stage': r[17] or 'new',
-            'problem': r[18],
-            'vin': r[19],
-            'mileage': r[20],
-            'diagnosis': r[21],
-            'work_cost': r[22],
-            'parts_cost': r[23],
-            'prepayment': r[24],
-            'mechanic': r[25],
-            'accept_date': r[26],
-            'ready_date': r[27],
-            'payment_status': r[28],
-            'photos': to_list(r[29]),
+            'stage': r[16] or 'new',
+            'problem': r[17],
+            'vin': r[18],
+            'mileage': r[19],
+            'diagnosis': r[20],
+            'work_cost': r[21],
+            'parts_cost': r[22],
+            'prepayment': r[23],
+            'mechanic': r[24],
+            'accept_date': r[25],
+            'ready_date': r[26],
+            'payment_status': r[27],
+            'photos': to_list(r[28]),
         }
         for r in rows
     ]

@@ -20,7 +20,6 @@ interface Lead {
   visit_time?: string | null;
   est_price?: number | null;
   est_days?: string | null;
-  bitrix_id?: string | null;
 }
 
 const GET_LEADS_URL = "https://functions.poehali.dev/b73dae70-50b0-4466-bb13-f72076056498";
@@ -144,12 +143,12 @@ export default function Admin() {
   }
 
   function exportCSV() {
-    const header = ["Имя", "Телефон", "Услуга", "Модель", "Год", "Запись", "Стоимость от", "Срок", "Фото", "Битрикс ID", "Статус", "Заметка", "Дата"];
+    const header = ["Имя", "Телефон", "Услуга", "Модель", "Год", "Запись", "Стоимость от", "Срок", "Фото", "Статус", "Заметка", "Дата"];
     const rows = filtered.map(l => [
       l.name, l.phone, l.service || "", l.model || "", l.year || "",
       [l.visit_date, l.visit_time].filter(Boolean).join(" "),
       l.est_price ? `${l.est_price} ₽` : "", l.est_days || "",
-      l.photo_url || "", l.bitrix_id || "",
+      l.photo_url || "",
       STATUS_CONFIG[l.status].label, l.note || "", formatDate(l.created_at),
     ].map(c => `"${String(c).replace(/"/g, '""')}"`).join(";"));
     const csv = "\uFEFF" + [header.join(";"), ...rows].join("\n");
@@ -399,11 +398,6 @@ export default function Admin() {
                             {lead.est_days && (
                               <span className="inline-flex items-center gap-1 text-xs bg-neutral-800 text-neutral-400 px-2 py-1">
                                 <Icon name="Clock" size={11} />{lead.est_days}
-                              </span>
-                            )}
-                            {lead.bitrix_id && (
-                              <span className="inline-flex items-center gap-1 text-xs bg-blue-500/15 text-blue-400 px-2 py-1">
-                                <Icon name="CheckCircle" size={11} />Битрикс #{lead.bitrix_id}
                               </span>
                             )}
                           </div>
