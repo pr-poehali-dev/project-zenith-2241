@@ -27,6 +27,7 @@ def handler(event: dict, context) -> dict:
 
     if body.get('inspect'):
         import urllib.request
+        import urllib.error
 
         def _call(webhook, method, params=None):
             if not webhook.endswith('/'):
@@ -41,16 +42,24 @@ def handler(event: dict, context) -> dict:
         if not webhook:
             return {'statusCode': 400, 'headers': {'Access-Control-Allow-Origin': '*'},
                     'body': json.dumps({'error': 'BITRIX_WEBHOOK_URL is empty'})}
+        def _safe(method, params=None):
+            try:
+                return _call(webhook, method, params)
+            except urllib.error.HTTPError as he:
+                try:
+                    return {'__http_error__': he.code, '__body__': he.read().decode('utf-8')}
+                except Exception:
+                    return {'__http_error__': he.code}
+            except Exception as e:
+                return {'__error__': str(e)}
+
         out = {}
-        try:
-            sp = _call(webhook, 'crm.type.list')
-            types = sp.get('result', {}).get('types', [])
-            out['smart_processes'] = [
-                {'entityTypeId': t.get('entityTypeId'), 'title': t.get('title')} for t in types
-            ]
-        except Exception as e:
-            out['error'] = str(e)
-            types = []
+        out['profile'] = _safe('profile')
+        out['type_list_raw'] = _safe('crm.type.list')
+        types = out['type_list_raw'].get('result', {}).get('types', []) if isinstance(out['type_list_raw'].get('result'), dict) else []
+        out['smart_processes'] = [
+            {'entityTypeId': t.get('entityTypeId'), 'title': t.get('title')} for t in types
+        ]
         out['fields'] = {}
         for t in types:
             etid = t.get('entityTypeId')
