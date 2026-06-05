@@ -58,10 +58,13 @@ export default function BookingForm() {
   const [time, setTime] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [photoUrl, setPhotoUrl] = useState("");
+  const [problem, setProblem] = useState("");
+  const [photos, setPhotos] = useState<string[]>([]);
   const [photoUploading, setPhotoUploading] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [trackCode, setTrackCode] = useState("");
+
+  const MAX_PHOTOS = 5;
 
   const chosen = SERVICES.find(s => s.name === service);
 
@@ -70,35 +73,45 @@ export default function BookingForm() {
   const step3 = step2 && date !== "" && time !== "";
   const canSubmit = step3 && name.trim() !== "" && phone.trim() !== "" && !photoUploading;
 
-  async function uploadPhoto(file: File) {
-    if (file.size > 8 * 1024 * 1024) {
-      alert("Фото слишком большое (максимум 8 МБ)");
+  async function uploadPhotos(files: FileList) {
+    const slots = MAX_PHOTOS - photos.length;
+    if (slots <= 0) {
+      alert(`Можно прикрепить не более ${MAX_PHOTOS} фото`);
       return;
     }
+    const list = Array.from(files).slice(0, slots);
     setPhotoUploading(true);
     try {
-      const b64: string = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(String(reader.result));
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-      const res = await fetch(UPLOAD_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ file: b64, content_type: file.type || "image/jpeg" }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setPhotoUrl(data.url || "");
-      } else {
-        alert("Не удалось загрузить фото. Попробуйте другое.");
+      for (const file of list) {
+        if (file.size > 8 * 1024 * 1024) {
+          alert(`Фото «${file.name}» больше 8 МБ — пропущено`);
+          continue;
+        }
+        const b64: string = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result));
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        const res = await fetch(UPLOAD_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ file: b64, content_type: file.type || "image/jpeg" }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.url) setPhotos(prev => [...prev, data.url]);
+        }
       }
     } catch {
-      alert("Не удалось загрузить фото.");
+      alert("Не удалось загрузить часть фото.");
     } finally {
       setPhotoUploading(false);
     }
+  }
+
+  function removePhoto(url: string) {
+    setPhotos(prev => prev.filter(p => p !== url));
   }
 
   async function submit(e: React.FormEvent) {
@@ -111,10 +124,11 @@ export default function BookingForm() {
       `Онлайн-запись на ремонт.\n` +
       `Услуга: ${service}\n` +
       `Мопед: ${model}${year ? `, ${year} г.` : ""}\n` +
+      (problem.trim() ? `Проблема: ${problem.trim()}\n` : "") +
       `Запись: ${dateLabel}, ${time}\n` +
       (estPrice ? `Примерная стоимость: от ${estPrice.toLocaleString("ru-RU")} ₽\n` : "") +
       `Примерный срок: ${estDays}` +
-      (photoUrl ? `\nФото: ${photoUrl}` : "");
+      (photos.length ? `\nФото: ${photos.join(", ")}` : "");
 
     try {
       const res = await fetch(SEND_URL, {
@@ -122,7 +136,10 @@ export default function BookingForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name, phone, message, service, model,
-          year: year || null, photo_url: photoUrl || null,
+          year: year || null,
+          problem: problem.trim() || null,
+          photo_url: photos[0] || null,
+          photos,
           visit_date: dateLabel, visit_time: time,
           est_price: estPrice, est_days: estDays,
         }),

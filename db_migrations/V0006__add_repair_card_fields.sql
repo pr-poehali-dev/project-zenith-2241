@@ -1,0 +1,13 @@
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS stage text NOT NULL DEFAULT 'new';
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS problem text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS vin text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS mileage integer;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS diagnosis text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS work_cost integer;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS parts_cost integer;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS prepayment integer;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS mechanic text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS accept_date text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ready_date text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS payment_status text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS photos jsonb NOT NULL DEFAULT '[]'::jsonb;

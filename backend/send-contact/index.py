@@ -22,6 +22,7 @@ def send_to_bitrix(name, phone, fields):
         f"Услуга: {fields.get('service') or '—'}",
         f"Модель: {fields.get('model') or '—'}",
         f"Год выпуска: {fields.get('year') or '—'}",
+        f"Описание проблемы: {fields.get('problem') or '—'}",
         f"Запись: {fields.get('visit_date') or '—'} {fields.get('visit_time') or ''}".strip(),
         f"Примерная стоимость: {('от ' + str(fields.get('est_price')) + ' руб.') if fields.get('est_price') else '—'}",
         f"Примерный срок: {fields.get('est_days') or '—'}",
@@ -73,6 +74,14 @@ def handler(event: dict, context) -> dict:
     visit_date = (body.get('visit_date') or '').strip() or None
     visit_time = (body.get('visit_time') or '').strip() or None
     est_days = (body.get('est_days') or '').strip() or None
+    problem = (body.get('problem') or '').strip() or None
+
+    photos = body.get('photos')
+    if not isinstance(photos, list):
+        photos = []
+    photos = [str(p) for p in photos if p]
+    if not photo_url and photos:
+        photo_url = photos[0]
 
     year = body.get('year')
     try:
@@ -104,7 +113,7 @@ def handler(event: dict, context) -> dict:
         track_code = gen_code()
 
     bitrix_id = send_to_bitrix(name, phone, {
-        'service': service, 'model': model, 'year': year,
+        'service': service, 'model': model, 'year': year, 'problem': problem,
         'visit_date': visit_date, 'visit_time': visit_time,
         'est_price': est_price, 'est_days': est_days,
         'photo_url': photo_url, 'track_code': track_code,
@@ -113,10 +122,11 @@ def handler(event: dict, context) -> dict:
     cur.execute(
         """INSERT INTO leads
         (name, phone, message, track_code, service, model, year, photo_url,
-         visit_date, visit_time, est_price, est_days, bitrix_id)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+         visit_date, visit_time, est_price, est_days, bitrix_id, problem, photos, accept_date)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
         (name, phone, message or None, track_code, service, model, year, photo_url,
-         visit_date, visit_time, est_price, est_days, bitrix_id)
+         visit_date, visit_time, est_price, est_days, bitrix_id, problem,
+         json.dumps(photos), visit_date)
     )
     conn.commit()
     cur.close()

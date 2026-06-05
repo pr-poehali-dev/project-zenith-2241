@@ -30,12 +30,24 @@ def handler(event: dict, context) -> dict:
     cur.execute(
         """SELECT id, name, phone, message, created_at, status, note, track_code,
                   service, model, year, photo_url, visit_date, visit_time,
-                  est_price, est_days, bitrix_id
+                  est_price, est_days, bitrix_id, stage, problem, vin, mileage,
+                  diagnosis, work_cost, parts_cost, prepayment, mechanic,
+                  accept_date, ready_date, payment_status, photos
            FROM leads ORDER BY created_at DESC"""
     )
     rows = cur.fetchall()
     cur.close()
     conn.close()
+
+    def to_list(v):
+        if v is None:
+            return []
+        if isinstance(v, str):
+            try:
+                return json.loads(v)
+            except Exception:
+                return []
+        return v
 
     leads = [
         {
@@ -56,6 +68,19 @@ def handler(event: dict, context) -> dict:
             'est_price': r[14],
             'est_days': r[15],
             'bitrix_id': r[16],
+            'stage': r[17] or 'new',
+            'problem': r[18],
+            'vin': r[19],
+            'mileage': r[20],
+            'diagnosis': r[21],
+            'work_cost': r[22],
+            'parts_cost': r[23],
+            'prepayment': r[24],
+            'mechanic': r[25],
+            'accept_date': r[26],
+            'ready_date': r[27],
+            'payment_status': r[28],
+            'photos': to_list(r[29]),
         }
         for r in rows
     ]
