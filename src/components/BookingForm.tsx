@@ -158,7 +158,8 @@ export default function BookingForm() {
 
   function reset() {
     setStatus("idle"); setService(""); setModel(""); setYear("");
-    setDate(""); setTime(""); setName(""); setPhone(""); setPhotoUrl("");
+    setDate(""); setTime(""); setName(""); setPhone("");
+    setProblem(""); setPhotos([]);
   }
 
   if (status === "success") {
@@ -251,33 +252,51 @@ export default function BookingForm() {
               </select>
             </div>
 
-            {/* Photo upload */}
+            {/* Описание проблемы */}
+            <div className="mb-4">
+              <p className="text-sm text-neutral-500 mb-2">Опишите проблему или что нужно сделать (необязательно)</p>
+              <textarea
+                value={problem}
+                onChange={e => setProblem(e.target.value)}
+                rows={3}
+                placeholder="Например: не заводится, стучит двигатель, нужна замена масла…"
+                className="w-full bg-white border border-neutral-300 px-4 py-3 focus:outline-none focus:border-red-600 transition-colors resize-none"
+              />
+            </div>
+
+            {/* Photo upload (несколько) */}
             <div>
-              <p className="text-sm text-neutral-500 mb-2">Фото мопеда (необязательно, поможет мастеру оценить)</p>
-              {photoUrl ? (
-                <div className="flex items-center gap-4">
-                  <img src={photoUrl} alt="Фото мопеда" className="w-24 h-24 object-cover border border-neutral-300" />
-                  <button
-                    type="button"
-                    onClick={() => setPhotoUrl("")}
-                    className="text-sm text-red-600 flex items-center gap-1 hover:underline"
-                  >
-                    <Icon name="X" size={15} /> Удалить
-                  </button>
-                </div>
-              ) : (
-                <label className={`inline-flex items-center gap-2 px-4 py-3 border border-dashed border-neutral-400 cursor-pointer hover:border-black transition-colors text-sm ${photoUploading ? "opacity-60" : ""}`}>
-                  <Icon name={photoUploading ? "Loader" : "ImagePlus"} size={18} className={photoUploading ? "animate-spin" : ""} />
-                  {photoUploading ? "Загрузка…" : "Прикрепить фото"}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    disabled={photoUploading}
-                    onChange={e => { const f = e.target.files?.[0]; if (f) uploadPhoto(f); }}
-                  />
-                </label>
-              )}
+              <p className="text-sm text-neutral-500 mb-2">
+                Фото мопеда и дефектов (до {MAX_PHOTOS}, поможет мастеру оценить)
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {photos.map(url => (
+                  <div key={url} className="relative w-24 h-24">
+                    <img src={url} alt="Фото мопеда" className="w-24 h-24 object-cover border border-neutral-300" />
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(url)}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 text-white flex items-center justify-center hover:bg-black transition-colors"
+                    >
+                      <Icon name="X" size={14} />
+                    </button>
+                  </div>
+                ))}
+                {photos.length < MAX_PHOTOS && (
+                  <label className={`w-24 h-24 inline-flex flex-col items-center justify-center gap-1 border border-dashed border-neutral-400 cursor-pointer hover:border-black transition-colors text-xs text-neutral-500 ${photoUploading ? "opacity-60 pointer-events-none" : ""}`}>
+                    <Icon name={photoUploading ? "Loader" : "ImagePlus"} size={20} className={photoUploading ? "animate-spin" : ""} />
+                    {photoUploading ? "Загрузка…" : "Добавить"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="hidden"
+                      disabled={photoUploading}
+                      onChange={e => { if (e.target.files?.length) uploadPhotos(e.target.files); e.target.value = ""; }}
+                    />
+                  </label>
+                )}
+              </div>
             </div>
           </div>
 
