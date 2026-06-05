@@ -25,6 +25,52 @@ def handler(event: dict, context) -> dict:
             'body': json.dumps({'error': 'unauthorized'})
         }
 
+    if body.get('inspect'):
+        import urllib.request
+
+        def _call(webhook, method, params=None):
+            if not webhook.endswith('/'):
+                webhook += '/'
+            u = webhook + method + '.json'
+            d = json.dumps(params or {}).encode('utf-8')
+            r = urllib.request.Request(u, data=d, headers={'Content-Type': 'application/json'})
+            with urllib.request.urlopen(r, timeout=20) as resp:
+                return json.loads(resp.read().decode('utf-8'))
+
+        webhook = os.environ.get('BITRIX_WEBHOOK_URL', '').strip()
+        if not webhook:
+            return {'statusCode': 400, 'headers': {'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'BITRIX_WEBHOOK_URL is empty'})}
+        out = {}
+        try:
+            sp = _call(webhook, 'crm.type.list')
+            types = sp.get('result', {}).get('types', [])
+            out['smart_processes'] = [
+                {'entityTypeId': t.get('entityTypeId'), 'title': t.get('title')} for t in types
+            ]
+        except Exception as e:
+            out['error'] = str(e)
+            types = []
+        out['fields'] = {}
+        for t in types:
+            etid = t.get('entityTypeId')
+            try:
+                f = _call(webhook, 'crm.item.fields', {'entityTypeId': etid})
+                fields = f.get('result', {}).get('fields', {})
+                out['fields'][str(etid)] = {
+                    'title': t.get('title'),
+                    'fields': {
+                        c: {'title': m.get('title'), 'type': m.get('type'),
+                            'isRequired': m.get('isRequired'),
+                            'items': [i.get('VALUE') for i in (m.get('items') or [])] if m.get('items') else None}
+                        for c, m in fields.items()
+                    }
+                }
+            except Exception as e:
+                out['fields'][str(etid)] = {'error': str(e)}
+        return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps(out, ensure_ascii=False)}
+
     conn = psycopg2.connect(os.environ['DATABASE_URL'])
     cur = conn.cursor()
     cur.execute(
